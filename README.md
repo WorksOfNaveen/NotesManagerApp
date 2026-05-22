@@ -165,6 +165,7 @@ Loaded once when AsyncStorage has no saved notes (`useNotesStore` → `onRehydra
 - **[APP_FLOW.md](./APP_FLOW.md)** — Step-by-step user flows and navigation
 - **[COMPONENTS.md](./COMPONENTS.md)** — What each component and store does
 - **[commands.md](./commands.md)** — Emulator, Metro, Gradle, and Git commands
+- **[CreateAndUploadApk.md](./CreateAndUploadApk.md)** — Build APK, push to GitHub, and ship updates
 
 ## Security note (development)
 

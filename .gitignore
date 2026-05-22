@@ -77,3 +77,4 @@ yarn-error.log
 # md
 *.md
 !README.md
+!CreateAndUploadApk.md
