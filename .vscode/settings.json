@@ -1,0 +1,20 @@
+{
+    "java.import.exclusions": [
+      "**/node_modules/**",
+      "**/.cxx/**",
+      "**/build/**",
+      "**/android/build/**"
+    ],
+    "java.import.gradle.enabled": false,
+    "java.project.importOnFirstTimeStartup": "disabled",
+    "java.configuration.updateBuildConfiguration": "disabled",
+    "java.compile.nullAnalysis.mode": "disabled",
+    "java.autobuild.enabled": false,
+    "files.watcherExclude": {
+      "**/node_modules/**": true
+    },
+    "search.exclude": {
+      "**/node_modules": true
+    }
+  }
+  

@@ -1,97 +1,182 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Notes App
 
-# Getting Started
+A simple React Native notes app inspired by **Google Keep**. Create, edit, and delete notes on your device. Everything is saved locally — no account or internet required.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+On first launch, two **starter notes** introduce the app and highlight full-stack React Native experience (see `src/data/seedNotes.ts`).
 
-## Step 1: Start Metro
+## Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- **Splash screen** — “Welcome to Notes App” for 2.5 seconds on open
+- **Google Keep theme** — Cream/yellow light mode and charcoal dark mode with amber accents
+- **Home** — Notes in a 2-column grid with rounded cards
+- **Editor** — Create or edit notes; **Save** / **Update** in the top-right header
+- **Delete** — Swipe left or trash button; **undo snackbar** for 4 seconds before permanent delete
+- **Starter notes** — Two sample notes on first launch (empty storage only)
+- **Local storage** — Notes persist after you close the app (AsyncStorage + Zustand)
+- **Dark mode** — Follows your system light/dark setting
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## User flow (quick)
 
-```sh
-# Using npm
-npm start
+1. Splash → **My Notes** (grid)
+2. Tap **+** or a card → **Editor** → tap **Save** or **Update** (header, top right)
+3. **Manage** → **Delete** → swipe or trash → **UNDO** on snackbar if you change your mind
 
-# OR using Yarn
-yarn start
+See [APP_FLOW.md](./APP_FLOW.md) for the full journey and [COMPONENTS.md](./COMPONENTS.md) for how each file works.
+
+## Tech stack
+
+| Area | Choice |
+|------|--------|
+| Framework | React Native 0.85 (CLI, TypeScript) |
+| Navigation | React Navigation 7 (native stack) |
+| State | Zustand 5 with persist middleware |
+| Storage | `@react-native-async-storage/async-storage` |
+| Gestures | `react-native-gesture-handler` (swipe to delete) |
+| Theme | Google Keep–style palette in `src/theme/colors.ts` |
+
+## Project structure
+
+```
+NoteManagerApp/
+├── App.tsx                 # Two-phase root: splash, then navigation
+├── APP_FLOW.md             # User journey documentation
+├── COMPONENTS.md           # Components & architecture guide
+├── commands.md             # Handy dev / build commands
+├── src/
+│   ├── components/         # NoteCard, DeleteNoteRow, HeaderButton, UndoSnackbar
+│   ├── constants/          # Splash duration, undo timer, snackbar layout
+│   ├── data/               # seedNotes (first-launch samples)
+│   ├── hooks/              # useAppTheme
+│   ├── navigation/         # AppNavigator
+│   ├── screens/            # Splash, Home, Editor, Delete
+│   ├── store/              # useNotesStore
+│   ├── theme/              # colors (Google Keep palette)
+│   ├── types/              # Note, navigation types
+│   └── utils/              # noteDisplay (title/preview helpers)
+├── android/                # Native Android (applicationId: com.notemanagerapp)
+└── ios/
 ```
 
-## Step 2: Build and run your app
+## Requirements
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+- Node.js **>= 22.11.0** (see `package.json` engines)
+- React Native environment: [Set up your environment](https://reactnative.dev/docs/set-up-your-environment)
+- For iOS: Xcode, CocoaPods
+- For Android APK: JDK, Android SDK, `ANDROID_HOME` configured
 
-### Android
+## Install dependencies
+
+From the project root:
 
 ```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+npm install --ignore-scripts
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+On iOS, install pods after native dependencies change:
 
 ```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
+cd ios
 bundle exec pod install
+cd ..
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## Run the app
+
+**Start Metro:**
 
 ```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+npm start
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+**Android (new terminal):**
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+```sh
+npm run android
+```
 
-## Step 3: Modify your app
+**iOS:**
 
-Now that you have successfully run the app, let's make changes!
+```sh
+npm run ios
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Build APK (Android)
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+From the project root:
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+```sh
+cd android
+./gradlew assembleRelease
+```
 
-## Congratulations! :tada:
+Release APK path:
 
-You've successfully run and modified your React Native App. :partying_face:
+`android/app/build/outputs/apk/release/app-release.apk`
 
-### Now what?
+Debug APK (faster, for testing):
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+```sh
+./gradlew assembleDebug
+```
 
-# Troubleshooting
+Output: `android/app/build/outputs/apk/debug/app-debug.apk`
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+> Release builds currently use the debug keystore (fine for demos). For Play Store, create a release keystore and configure `signingConfigs` in `android/app/build.gradle`.
 
-# Learn More
+Attach the APK to a [GitHub Release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) rather than committing it to the repo.
 
-To learn more about React Native, take a look at the following resources:
+## Scripts
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start Metro bundler |
+| `npm run android` | Build and run on Android |
+| `npm run ios` | Build and run on iOS |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run Jest tests |
+
+## How to use the app
+
+1. Wait for the welcome splash, then you land on **My Notes** (cream background in light mode).
+2. On first install, two starter notes may appear — edit or delete them like any note.
+3. Tap **+** (amber FAB) to add a note, or tap a card to edit it.
+4. Tap **Save** or **Update** in the **top-right** of the editor header when finished.
+5. Tap **Manage** to open the delete screen.
+6. Swipe a note left or tap the trash icon — the note hides immediately and a snackbar offers **UNDO** for 4 seconds.
+
+## Starter notes (first launch)
+
+Loaded once when AsyncStorage has no saved notes (`useNotesStore` → `onRehydrateStorage`):
+
+| Title | Purpose |
+|-------|---------|
+| Why pick me for this role | Experience building secure apps, faster delivery with safe tooling (~30–40%), passion for app dev, choosing solid approaches over shortcuts |
+| Good fit if you need… | Full-stack React Native fit: mobile + API, simple architecture, hiring conversation starter |
+
+## Theme
+
+| Mode | Background | Cards | Accent | FAB text |
+|------|------------|-------|--------|----------|
+| Light | Cream `#FFF8E1` | White | Amber `#FBC02D` | Dark `#212121` |
+| Dark | Charcoal `#202124` | `#2D2E30` | Amber `#FBC02D` | Dark `#212121` |
+
+## Documentation
+
+- **[APP_FLOW.md](./APP_FLOW.md)** — Step-by-step user flows and navigation
+- **[COMPONENTS.md](./COMPONENTS.md)** — What each component and store does
+- **[commands.md](./commands.md)** — Emulator, Metro, Gradle, and Git commands
+
+## Security note (development)
+
+This project uses a Cursor hook that requires `npm install --ignore-scripts` for dependency installs. See `.cursor/rules/frontend-dependency-security.mdc` if you use the AI agent to add packages.
+
+## Troubleshooting
+
+- **Metro / build issues:** See [React Native troubleshooting](https://reactnative.dev/docs/troubleshooting)
+- **iOS pods:** Run `bundle exec pod install` in `ios/`
+- **Android:** Ensure emulator or device is connected; try `cd android && ./gradlew clean` if builds fail
+- **No starter notes:** They only load when storage is empty; clear app data or reinstall to see them again
+
+## License
+
+Private project (`package.json`: `"private": true`).
