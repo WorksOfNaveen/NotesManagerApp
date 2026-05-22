@@ -25,7 +25,7 @@ App development has always fascinated me. That's why I often take the harder rou
 → Jump between UI tweaks and integration work in the same week
 → Keep things simple  no over-engineered state for a notes app, and no chaos on a real product either
 
-Happy to walk through projects and talk through tradeoffs that's usually where the real conversation starts anyway.`,
+Happy to walk through projects.`,
       createdAt: base + 2,
       updatedAt: base + 2,
     },
