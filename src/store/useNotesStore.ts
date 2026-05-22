@@ -23,6 +23,8 @@ function makeNote(title: string, body: string): Note {
 
 type NotesStore = {
   notes: Note[];
+  /** Persisted flag: starter notes are injected only once per install. */
+  hasSeeded: boolean;
   deletedNotes: Note[];
   addNote: (title: string, body: string) => void;
   updateNote: (id: string, title: string, body: string) => void;
@@ -35,6 +37,7 @@ export const useNotesStore = create<NotesStore>()(
   persist(
     set => ({
       notes: [],
+      hasSeeded: false,
       deletedNotes: [],
 
       addNote: (title, body) => {
@@ -91,13 +94,17 @@ export const useNotesStore = create<NotesStore>()(
     {
       name: 'notes-storage',
       storage: createJSONStorage(() => AsyncStorage),
-      // Only active notes are written to disk; pending deletes stay in memory.
-      partialize: state => ({ notes: state.notes }),
+      // notes + hasSeeded on disk; pending deletes stay in memory only.
+      partialize: state => ({ notes: state.notes, hasSeeded: state.hasSeeded }),
       onRehydrateStorage: () => state => {
-        // First install: show starter notes when nothing was saved yet.
-        if (state && state.notes.length === 0) {
-          useNotesStore.setState({ notes: getSeedNotes() });
+        if (!state || state.hasSeeded) {
+          return;
         }
+        if (state.notes.length > 0) {
+          useNotesStore.setState({ hasSeeded: true });
+          return;
+        }
+        useNotesStore.setState({ notes: getSeedNotes(), hasSeeded: true });
       },
     },
   ),

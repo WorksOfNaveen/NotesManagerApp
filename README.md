@@ -11,7 +11,7 @@ On first launch, two **starter notes** introduce the app and highlight full-stac
 - **Home** — Notes in a 2-column grid with rounded cards
 - **Editor** — Create or edit notes; **Save** / **Update** in the top-right header
 - **Delete** — Swipe left or trash button; **undo snackbar** for 4 seconds before permanent delete
-- **Starter notes** — Two sample notes on first launch (empty storage only)
+- **Starter notes** — Two sample notes on first launch only (`hasSeeded` flag; not again after you delete all notes)
 - **Local storage** — Notes persist after you close the app (AsyncStorage + Zustand)
 - **Dark mode** — Follows your system light/dark setting
 
@@ -146,7 +146,7 @@ Attach the APK to a [GitHub Release](https://docs.github.com/en/repositories/rel
 
 ## Starter notes (first launch)
 
-Loaded once when AsyncStorage has no saved notes (`useNotesStore` → `onRehydrateStorage`):
+Loaded once per install when storage has never been seeded (`hasSeeded` is false and `notes` is empty). Deleting every note does not bring them back (`useNotesStore` → `onRehydrateStorage`):
 
 | Title | Purpose |
 |-------|---------|
@@ -175,7 +175,7 @@ This project uses a Cursor hook that requires `npm install --ignore-scripts` for
 - **Metro / build issues:** See [React Native troubleshooting](https://reactnative.dev/docs/troubleshooting)
 - **iOS pods:** Run `bundle exec pod install` in `ios/`
 - **Android:** Ensure emulator or device is connected; try `cd android && ./gradlew clean` if builds fail
-- **No starter notes:** They only load when storage is empty; clear app data or reinstall to see them again
+- **No starter notes:** They only load on first install before `hasSeeded` is set; clear app data or reinstall to see them again
 
 ## License
 
